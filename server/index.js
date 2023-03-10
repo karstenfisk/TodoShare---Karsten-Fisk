@@ -13,7 +13,12 @@ const users = require("./api/users");
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000" || process.env.CORS,
+    credentials: true,
+  })
+);
 app.use(morgan("tiny"));
 
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -22,7 +22,7 @@ router.post("/", async (req, res, next) => {
         res.send("Cannot add user to note you do not own.");
       }
     } else {
-      // If no add currently signed in user as owner.
+      // If we are not sharing a note, add currently signed in user as owner.
       const user = await User.findByToken(req.cookies.token);
       const note = await Note.create(req.body);
       await note.addUser(user);
