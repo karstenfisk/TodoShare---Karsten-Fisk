@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const Note = require("./Note");
+const Friend = require("./Friends");
 dotenv.config();
 const SALT = 5;
 
@@ -52,16 +53,21 @@ User.findByToken = async (token) => {
       include: [
         {
           model: Note,
+          include: { model: User },
+        },
+        {
+          model: User,
+          as: "friends",
         },
       ],
     });
     if (!user) {
-      return "Could not find user matching this token";
+      console.log("Could not find user matching this token");
     }
     return user;
   } catch (e) {
     console.log(e);
-    const err = Error("e");
+    const err = Error(e);
     err.status = 401;
     throw err;
   }

@@ -6,6 +6,8 @@ const users = [
   { username: "rdearnaley2", password: "BpObLkHm" },
   { username: "mdegiorgis3", password: "rhXHPx5" },
   { username: "ftwitty4", password: "9t663ME7" },
+  { username: "yes", password: "123" },
+  { username: "no", password: "123" },
 ];
 
 const notes = [

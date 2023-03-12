@@ -16,12 +16,19 @@ router.post("/", async (req, res, next) => {
       if (verifyOwner) {
         const note = await Note.findByPk(noteId);
         const user = await User.findByPk(guestId);
-        await note.addUser(user, { through: { userType: "guest" } });
-        res.json(note);
+        const verifyExisting = await UserNote.findOne({
+          where: { userId: guestId, noteId: noteId, userType: "guest" },
+        });
+        if (!verifyExisting) {
+          await note.addUser(user, { through: { userType: "guest" } });
+          res.json(note);
+        } else {
+          res.send("user already added");
+        }
       } else {
         res.send("Cannot add user to note you do not own.");
       }
-    } else {
+    } else if (req.body.title && req.body.content) {
       // If we are not sharing a note, add currently signed in user as owner.
       const user = await User.findByToken(req.cookies.token);
       const note = await Note.create(req.body);
@@ -29,6 +36,25 @@ router.post("/", async (req, res, next) => {
 
       res.json(note);
     }
+  } catch (e) {
+    next(e);
+  }
+});
+// This was intended to be a delete request however I needed to be able to send in a req.body
+router.post("/remove", async (req, res, next) => {
+  try {
+    const note = await UserNote.findOne({
+      where: {
+        userId: req.body.guestId,
+        noteId: req.body.noteId,
+        userType: "guest",
+      },
+    });
+    if (!note) {
+      res.send("Note not found");
+    }
+    await note.destroy();
+    res.send("Guest has been removed from the note.");
   } catch (e) {
     next(e);
   }

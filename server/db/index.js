@@ -9,8 +9,6 @@ Note.belongsToMany(User, { through: UserNote });
 User.belongsToMany(User, {
   through: Friend,
   as: "friends",
-  foreignKey: "userId",
-  otherKey: "friendId",
 });
 
 module.exports = { db, Note, User, UserNote, Friend };
