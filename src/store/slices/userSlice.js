@@ -135,6 +135,11 @@ export const removeGuest = createAsyncThunk(
     try {
       await instance.post("/api/notes/remove", info);
       const { data } = await instance.get("/api/users/me");
+      data.notes = data.notes.sort((a, b) => {
+        if (a.userNote.userType > b.userNote.userType) return -1;
+        if (a.userNote.userType < b.userNote.userType) return 1;
+        return 0;
+      });
       return data;
     } catch (e) {
       throw e;

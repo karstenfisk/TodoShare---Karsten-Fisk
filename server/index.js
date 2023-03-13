@@ -42,15 +42,6 @@ io.on("connection", (socket) => {
   socket.on("makeRoom", ({ id }) => {
     socket.join(id);
   });
-  socket.on("friend-request", (id) => {
-    io.to(id).emit("You have received a friend request!");
-  });
-  socket.on("friend-accept", (id) => {
-    io.to(id).emit("Your friend request has been accepted!");
-  });
-  socket.on("note-share", (id) => {
-    io.to(id).emit("You have been added to a note!");
-  });
 });
 
 //Socket middleware

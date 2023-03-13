@@ -24,7 +24,6 @@ router.post("/login", async (req, res, next) => {
     res.cookie("token", token, {
       httpOnly: true,
     });
-    io.emit("makeRoom", { id: user.id });
     res.json(user);
   } catch (e) {
     console.log(e);
@@ -41,7 +40,6 @@ router.post("/signup", async (req, res, next) => {
     res.cookie("token", token, {
       httpOnly: true,
     });
-    io.emit("makeRoom", { id: user.id });
     res.send(user);
   } catch (err) {
     if (err.name === "SequelizeUniqueConstraintError") {
@@ -88,7 +86,7 @@ router.post("/friends/add", async (req, res, next) => {
             friendId: user.id,
             type: "incoming",
           });
-          io.emit("friend-request", room);
+          io.to(room).emit("friend-request");
         } else {
           res.send("Friend already added or request is pending");
         }
@@ -116,7 +114,7 @@ router.put("/friends/accept", async (req, res, next) => {
       if (friend1 && friend2) {
         await friend1.update({ status: "accepted" });
         await friend2.update({ status: "accepted" });
-        io.emit("friend-accept", room);
+        io.to(room).emit("friend-accept");
 
         res.json(await User.findByToken(req.cookies.token));
       }

@@ -23,7 +23,7 @@ router.post("/", async (req, res, next) => {
         });
         if (!verifyExisting) {
           await note.addUser(user, { through: { userType: "guest" } });
-          io.emit("note-share", room);
+          io.to(room).emit("note-share");
           res.json(note);
         } else {
           res.send("user already added");

@@ -1,7 +1,7 @@
 const { db, User, Note } = require("./db/index");
 
 const users = [
-  { username: "adomenico0", password: "uEgmkwT2" },
+  { username: "karsten", password: "123" },
   { username: "iraffeorty1", password: "JKeBVbmNJx8" },
   { username: "rdearnaley2", password: "BpObLkHm" },
   { username: "mdegiorgis3", password: "rhXHPx5" },
