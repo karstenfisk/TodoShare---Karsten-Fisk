@@ -168,6 +168,7 @@ const userSlice = createSlice({
     });
     builder.addCase(signOut.fulfilled, (state, action) => {
       state.status = "null";
+      state.user = {};
     });
     builder.addCase(acceptFriend.fulfilled, (state, action) => {
       state.user = action.payload;
