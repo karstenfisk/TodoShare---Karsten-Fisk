@@ -2,16 +2,25 @@ import Nav from "./components/Nav";
 import Notes from "./components/Notes";
 import Friends from "./components/Friends";
 import { Route, Routes } from "react-router-dom";
-import { useEffect } from "react";
-import { io } from "socket.io-client";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "../store/slices/userSlice";
+import { useEffect, useState } from "react";
+import socket from "../socket";
 
-export default function Home() {
+export default function Home({ appRef }) {
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    const socket = io("http://localhost:5000");
-    socket.on("connected", () => {
-      console.log("signed in");
+    socket.on("friend-request", async (data) => {
+      await dispatch(fetchUser());
     });
-  }, []);
+    socket.on("friend-accept", async (data) => {
+      await dispatch(fetchUser());
+    });
+    socket.on("note-share", async (data) => {
+      await dispatch(fetchUser());
+    });
+  }, [socket]);
   return (
     <div className="home">
       <Nav />

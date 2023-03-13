@@ -107,15 +107,17 @@ export default function Popup({ setPopup, note }) {
         <div className="share-friends">
           {user.friends.length > 0
             ? user.friends.map((e) => {
-                return (
-                  <ShareFriend
-                    key={e.id}
-                    add={add}
-                    setAdd={setAdd}
-                    friend={e}
-                    note={note.users}
-                  />
-                );
+                if (e.friend.status === "accepted") {
+                  return (
+                    <ShareFriend
+                      key={e.id}
+                      add={add}
+                      setAdd={setAdd}
+                      friend={e}
+                      note={note.users}
+                    />
+                  );
+                }
               })
             : "No friends to display"}
         </div>

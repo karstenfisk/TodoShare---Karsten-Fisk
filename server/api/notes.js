@@ -9,6 +9,8 @@ router.post("/", async (req, res, next) => {
     if (req.body.guestId) {
       const owner = await User.findByToken(req.cookies.token);
       const { noteId, guestId } = req.body;
+      const io = req.io;
+      const room = guestId;
       // Check if user adding a guest owns the note.
       const verifyOwner = await UserNote.findOne({
         where: { userId: owner.id, noteId: noteId, userType: "owner" },
@@ -21,6 +23,7 @@ router.post("/", async (req, res, next) => {
         });
         if (!verifyExisting) {
           await note.addUser(user, { through: { userType: "guest" } });
+          io.emit("note-share", room);
           res.json(note);
         } else {
           res.send("user already added");

@@ -1,10 +1,11 @@
 import { MDBIcon } from "mdb-react-ui-kit";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { acceptFriend, rejectFriend } from "../../../store/slices/userSlice";
 
 export default function Requests({ friends }) {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   const [requests, setRequests] = useState([]);
   useEffect(() => {
     friends.map((friend) => {
@@ -15,9 +16,8 @@ export default function Requests({ friends }) {
         setRequests([...requests, friend]);
       }
     });
-  }, []);
+  }, [user]);
   const handleReject = (id) => {
-    console.log(id);
     dispatch(rejectFriend({ id: id }));
   };
   const handleAccept = (id) => {

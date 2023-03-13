@@ -3,7 +3,6 @@ const router = express.Router();
 const { User, Friend } = require("../db/index");
 
 const ms = 43200000;
-
 // Get signed in user.
 // I read this is restful for getting signed in user. It may not be though...
 router.get("/me", async (req, res, next) => {
@@ -19,12 +18,13 @@ router.get("/me", async (req, res, next) => {
 //Sign in
 router.post("/login", async (req, res, next) => {
   try {
+    const io = req.io;
     const token = await User.authenticate(req.body);
     const user = await User.findByToken(token);
     res.cookie("token", token, {
       httpOnly: true,
     });
-    req.io.emit("connected", { userId: user.id });
+    io.emit("makeRoom", { id: user.id });
     res.json(user);
   } catch (e) {
     console.log(e);
@@ -35,11 +35,13 @@ router.post("/login", async (req, res, next) => {
 //Create an account
 router.post("/signup", async (req, res, next) => {
   try {
+    const io = req.io;
     const user = await User.create(req.body);
     const token = await user.generateToken();
     res.cookie("token", token, {
       httpOnly: true,
     });
+    io.emit("makeRoom", { id: user.id });
     res.send(user);
   } catch (err) {
     if (err.name === "SequelizeUniqueConstraintError") {
@@ -53,6 +55,7 @@ router.post("/signup", async (req, res, next) => {
 
 router.post("/friends/add", async (req, res, next) => {
   try {
+    const io = req.io;
     const user = await User.findByToken(req.cookies.token);
     if (user) {
       const friend = await User.findOne({
@@ -61,6 +64,7 @@ router.post("/friends/add", async (req, res, next) => {
       if (!friend) {
         res.status(404).send("User not found");
       } else {
+        const room = friend.id;
         const check1 = await Friend.findOne({
           where: {
             userId: user.id,
@@ -84,6 +88,7 @@ router.post("/friends/add", async (req, res, next) => {
             friendId: user.id,
             type: "incoming",
           });
+          io.emit("friend-request", room);
         } else {
           res.send("Friend already added or request is pending");
         }
@@ -99,6 +104,8 @@ router.put("/friends/accept", async (req, res, next) => {
   try {
     const user = await User.findByToken(req.cookies.token);
     const { id } = req.body;
+    const io = req.io;
+    const room = id;
     const friend1 = await Friend.findOne({
       where: { userId: user.id, friendId: id },
     });
@@ -109,6 +116,8 @@ router.put("/friends/accept", async (req, res, next) => {
       if (friend1 && friend2) {
         await friend1.update({ status: "accepted" });
         await friend2.update({ status: "accepted" });
+        io.emit("friend-accept", room);
+
         res.json(await User.findByToken(req.cookies.token));
       }
     } else {

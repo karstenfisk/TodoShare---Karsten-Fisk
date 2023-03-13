@@ -27,7 +27,6 @@ export default function Login() {
       dispatch(
         register({ username: username, password: password, remember: remember })
       );
-      console.log("register");
     } else if (justifyActive === "tab1") {
       //login
       dispatch(
