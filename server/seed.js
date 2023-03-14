@@ -163,21 +163,21 @@ const notes = [
 const seed = async () => {
   await db.sync({ force: true });
 
-  await Promise.all(users.map((user) => User.create(user)));
-  await Promise.all(
-    notes.map(async (note) => {
-      const newNote = await Note.create(note);
-      const OwnerGuest = Math.floor(Math.random() * 2) + 1;
-      const userIdx = Math.floor(Math.random() * 5) + 1;
-      const user = await User.findByPk(userIdx);
-      if (OwnerGuest === 2) {
-        // add user as guest
-        await newNote.addUser(user, { through: { userType: "guest" } });
-      } else {
-        //just add user
-        await newNote.addUser(user);
-      }
-    })
-  );
+  // await Promise.all(users.map((user) => User.create(user)));
+  // await Promise.all(
+  //   notes.map(async (note) => {
+  //     const newNote = await Note.create(note);
+  //     const OwnerGuest = Math.floor(Math.random() * 2) + 1;
+  //     const userIdx = Math.floor(Math.random() * 5) + 1;
+  //     const user = await User.findByPk(userIdx);
+  //     if (OwnerGuest === 2) {
+  //       // add user as guest
+  //       await newNote.addUser(user, { through: { userType: "guest" } });
+  //     } else {
+  //       //just add user
+  //       await newNote.addUser(user);
+  //     }
+  //   })
+  // );
 };
 seed();

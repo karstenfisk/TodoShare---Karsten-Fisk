@@ -35,6 +35,8 @@ app.use(morgan("tiny"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(express.static(path.join(__dirname, "build")));
+
 // Parser to send cookies to be used for auth
 app.use(cookieParser());
 
@@ -53,9 +55,13 @@ app.use((req, res, next) => {
 // Api routes
 app.use("/api/users", users);
 app.use("/api/notes", notes);
+app.get("/css/index.css", (req, res, next) => {
+  const cssPath = path.join(__dirname, "..", "src", "index.css");
+  res.sendFile(cssPath);
+});
 
-app.get("/", (req, res, next) => {
-  res.send("Todo Api");
+app.get("*", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 // Error Handling Middleware
