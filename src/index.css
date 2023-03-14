@@ -53,13 +53,14 @@ body {
 }
 .notes {
   margin-left: 60px;
+  margin-right: 10px;
 }
 .notes-container {
   padding: 15px;
   padding-left: 30px;
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 .single-note {
   position: relative;
