@@ -15,20 +15,9 @@ const users = require("./api/users");
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
+const io = socketIo(server);
 
-app.use(
-  cors({
-    origin: "http://localhost:3000" || process.env.CORS,
-    credentials: true,
-  })
-);
+app.use(cors());
 
 app.use(morgan("tiny"));
 
