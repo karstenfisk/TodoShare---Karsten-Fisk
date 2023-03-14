@@ -48,7 +48,9 @@ app.get("/css/index.css", (req, res, next) => {
   const cssPath = path.join(__dirname, "..", "src", "index.css");
   res.sendFile(cssPath);
 });
-
+app.get("/friends", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 app.get("*", (req, res, next) => {
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
