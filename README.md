@@ -1,6 +1,5 @@
-# Foobar
+# [NoteShare](https://notes-2254.onrender.com/)
 
-This is an application that allows users to create notes and share their notes with friends they have added!
 
 ## Installation
 
